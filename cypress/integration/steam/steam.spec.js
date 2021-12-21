@@ -15,25 +15,30 @@ describe('Steam TS', () => {
     const STEAM_SHOP_FILTER_BY_DESC = '#Price_DESC'
     const STEAM_SHOP_ITEM_PRICE = 'div.col.search_price.responsive_secondrow'
 
-    it('Steam TC', () => {
-        cy.visit(HOST)
-        cy.get(STEAM_SHOP)
+    const parametrization = [
+        ["The Witcher", 10],["Fallout", 20]
+    ]
+    parametrization.forEach((param) => {
+        it('Steam TC', () => {
+            cy.visit(HOST)
+            cy.get(STEAM_SHOP)
 
-        cy.get(STEAM_SEARCH).type("The Witcher") // hardcode DDT
-        cy.get(STEAM_SHOP_SUGGESTIONS, {timeout: DEFAULT_TIMEOUT}).should('be.visible')
-        cy.get(STEAM_SHOP_SEARCH_BUTTON).click()
-        cy.get(STEAM_SHOP_RESULT_ROW).find('a').should('not.be.empty')
+            cy.get(STEAM_SEARCH).type(param[0]) // hardcode DDT
+            cy.get(STEAM_SHOP_SUGGESTIONS, {timeout: DEFAULT_TIMEOUT}).should('be.visible')
+            cy.get(STEAM_SHOP_SEARCH_BUTTON).click()
+            cy.get(STEAM_SHOP_RESULT_ROW).find('a').should('not.be.empty')
 
-        cy.intercept({method: "GET", url: SEARCH_RESULT,}).as("getSearch")
-        cy.get(STEAM_SHOP_RESULT_ROW_FILTER, {timeout: DEFAULT_TIMEOUT}).click()
-        cy.get(STEAM_SHOP_FILTER_BY_DESC, {timeout: DEFAULT_TIMEOUT}).click()
-        cy.wait("@getSearch")
+            cy.intercept({method: "GET", url: SEARCH_RESULT,}).as("getSearch")
+            cy.get(STEAM_SHOP_RESULT_ROW_FILTER, {timeout: DEFAULT_TIMEOUT}).click()
+            cy.get(STEAM_SHOP_FILTER_BY_DESC, {timeout: DEFAULT_TIMEOUT}).click()
+            cy.wait("@getSearch")
 
-        cy.get(STEAM_SHOP_RESULT_ROW, {timeout: DEFAULT_TIMEOUT}).find(STEAM_SHOP_ITEM_PRICE)
-            .then((prices) => {
-                const array_of_elems = Array.from(prices, spanElement => spanElement.innerText);
-                const sorted = array_of_elems.slice().sort((a,b)=>b-a)
-                expect(array_of_elems, 'prices are sorted').to.deep.equal(sorted)
+            cy.get(STEAM_SHOP_RESULT_ROW + " > a:nth-child(-n+"+ param[1] +")", {timeout: DEFAULT_TIMEOUT})
+                .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
+                    const array_of_elems = Array.from(prices, spanElement => spanElement.innerText);
+                    const sorted = array_of_elems.slice().sort((a,b)=>b-a)
+                    expect(array_of_elems, 'prices are sorted').to.deep.equal(sorted)
+                })
             })
+        })
     })
-})
