@@ -1,5 +1,5 @@
 // https://wiki.a1qa.com/pages/viewpage.action?pageId=681093258
-const { _ } = Cypress;
+import { sortPrices } from '../../utils/logic.js';
 
 describe('Steam TS', () => {
     const DEFAULT_TIMEOUT = 10000;
@@ -35,9 +35,7 @@ describe('Steam TS', () => {
 
             cy.get(`${STEAM_SHOP_RESULT_ROW} > a:nth-child(-n+${param.items})`, {timeout: DEFAULT_TIMEOUT})
                 .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
-                    const array_of_elems = Array.from(prices, spanElement => spanElement.innerText);
-                    const sorted = array_of_elems.slice().sort((a,b)=>b-a);
-                    expect(array_of_elems, 'prices are sorted').to.deep.equal(sorted);
+                    sortPrices(prices);
                 });
             });
         });
