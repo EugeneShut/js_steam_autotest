@@ -1,5 +1,4 @@
 // https://wiki.a1qa.com/pages/viewpage.action?pageId=681093258
-
 const { _ } = Cypress;
 
 describe('Steam TS', () => {
@@ -22,19 +21,19 @@ describe('Steam TS', () => {
     parametrization.forEach((param) => {
         it('Steam TC', () => {
             cy.visit(HOST);
-            cy.get(STEAM_SHOP, {timeout: DEFAULT_TIMEOUT}).should('be.visible');
+            cy.findVisibleElement(STEAM_SHOP, DEFAULT_TIMEOUT);
 
             cy.get(STEAM_SEARCH).type(param.game);
-            cy.get(STEAM_SHOP_SUGGESTIONS, {timeout: DEFAULT_TIMEOUT}).should('be.visible');
+            cy.findVisibleElement(STEAM_SHOP_SUGGESTIONS, DEFAULT_TIMEOUT);
             cy.get(STEAM_SHOP_SEARCH_BUTTON).click();
             cy.get(STEAM_SHOP_RESULT_ROW).find('a').should('not.be.empty');
 
             cy.intercept({method: "GET", url: SEARCH_RESULT,}).as("getSearch");
-            cy.get(STEAM_SHOP_RESULT_ROW_FILTER, {timeout: DEFAULT_TIMEOUT}).click();
-            cy.get(STEAM_SHOP_FILTER_BY_DESC, {timeout: DEFAULT_TIMEOUT}).click();
+            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW_FILTER, DEFAULT_TIMEOUT).click();
+            cy.findVisibleElement(STEAM_SHOP_FILTER_BY_DESC, DEFAULT_TIMEOUT).click();
             cy.wait("@getSearch");
 
-            cy.get(STEAM_SHOP_RESULT_ROW + " > a:nth-child(-n+"+ param.items +")", {timeout: DEFAULT_TIMEOUT})
+            cy.get(`${STEAM_SHOP_RESULT_ROW} > a:nth-child(-n+${param.items})`, {timeout: DEFAULT_TIMEOUT})
                 .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
                     const array_of_elems = Array.from(prices, spanElement => spanElement.innerText);
                     const sorted = array_of_elems.slice().sort((a,b)=>b-a);
