@@ -33,9 +33,10 @@ describe('Steam TS', () => {
             cy.findVisibleElement(STEAM_SHOP_FILTER_BY_DESC, DEFAULT_TIMEOUT).click();
             cy.wait("@getSearch");
 
-            cy.get(`${STEAM_SHOP_RESULT_ROW} > a:nth-child(-n+${param.items})`, {timeout: DEFAULT_TIMEOUT})
+            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW, DEFAULT_TIMEOUT).find('a')
                 .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
-                    sortPrices(prices);
+                    const slicedArray = prices.slice(0, param.items);
+                    sortPrices(slicedArray);
                 });
             });
         });
