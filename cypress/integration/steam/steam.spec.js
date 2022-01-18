@@ -22,7 +22,7 @@ describe('Steam TS', () => {
     parametrization.forEach((param) => {
         it('Steam TC', () => {
             cy.visit(HOST);
-            cy.get(STEAM_SHOP);
+            cy.get(STEAM_SHOP, {timeout: DEFAULT_TIMEOUT}).should('be.visible');
 
             cy.get(STEAM_SEARCH).type(param.game);
             cy.get(STEAM_SHOP_SUGGESTIONS, {timeout: DEFAULT_TIMEOUT}).should('be.visible');
