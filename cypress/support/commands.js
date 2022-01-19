@@ -24,6 +24,6 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('findVisibleElement', (element, timeout) => {
+Cypress.Commands.add('findVisibleElement', (element, timeout=Cypress.config("defaultCommandTimeout")) => {
     cy.get(element, {timeout: timeout}).should('be.visible');
 })

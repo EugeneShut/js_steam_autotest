@@ -21,19 +21,19 @@ describe('Steam TS', () => {
     parametrization.forEach((param) => {
         it('Steam TC', () => {
             cy.visit(HOST);
-            cy.findVisibleElement(STEAM_SHOP, DEFAULT_TIMEOUT);
+            cy.findVisibleElement(STEAM_SHOP);
 
             cy.get(STEAM_SEARCH).type(param.game);
-            cy.findVisibleElement(STEAM_SHOP_SUGGESTIONS, DEFAULT_TIMEOUT);
+            cy.findVisibleElement(STEAM_SHOP_SUGGESTIONS);
             cy.get(STEAM_SHOP_SEARCH_BUTTON).click();
             cy.get(STEAM_SHOP_RESULT_ROW).find('a').should('not.be.empty');
 
             cy.intercept({method: "GET", url: SEARCH_RESULT,}).as("getSearch");
-            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW_FILTER, DEFAULT_TIMEOUT).click();
-            cy.findVisibleElement(STEAM_SHOP_FILTER_BY_DESC, DEFAULT_TIMEOUT).click();
+            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW_FILTER).click();
+            cy.findVisibleElement(STEAM_SHOP_FILTER_BY_DESC).click();
             cy.wait("@getSearch");
 
-            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW, DEFAULT_TIMEOUT).find('a')
+            cy.findVisibleElement(STEAM_SHOP_RESULT_ROW).find('a')
                 .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
                     const slicedArray = prices.slice(0, param.items);
                     sortPrices(slicedArray);
