@@ -4,7 +4,7 @@ import { sortAndCompareArrays } from '../../utils/logic.js';
 describe('Steam TS', () => {
     const HOST = Cypress.config("baseUrl")
     const SEARCH_RESULT = HOST + '/search/results?**';
-    const STEAM_SHOP = '#global_header > div > div.supernav_container > a[data-tooltip-content=".submenu_store"]';
+    const STEAM_SHOP = 'div.supernav_container > a[data-tooltip-content=".submenu_store"]';
     const STEAM_SEARCH = '#store_nav_search_term';
     const STEAM_SHOP_SUGGESTIONS = '#search_suggestion_contents';
     const STEAM_SHOP_SEARCH_BUTTON = '#store_search_link > img';
