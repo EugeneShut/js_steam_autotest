@@ -2,6 +2,7 @@
 import { sortAndCompareArrays } from '../../utils/logic.js';
 
 describe('Steam TS', () => {
+    const HOST = Cypress.config("baseUrl")
     const SEARCH_RESULT = HOST + '/search/results?**';
     const STEAM_SHOP = '#global_header > div > div.supernav_container > a[data-tooltip-content=".submenu_store"]';
     const STEAM_SEARCH = '#store_nav_search_term';
@@ -18,7 +19,7 @@ describe('Steam TS', () => {
     ]
     parametrization.forEach((param) => {
         it('Steam TC', () => {
-            cy.visit(Cypress.config("baseUrl"));
+            cy.visit(HOST);
             cy.findVisibleElement(STEAM_SHOP);
 
             cy.get(STEAM_SEARCH).type(param.game);
