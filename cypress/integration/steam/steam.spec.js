@@ -2,8 +2,6 @@
 import { sortPrices } from '../../utils/logic.js';
 
 describe('Steam TS', () => {
-    const DEFAULT_TIMEOUT = 10000;
-    const HOST = 'https://store.steampowered.com';
     const SEARCH_RESULT = HOST + '/search/results?**';
     const STEAM_SHOP = '#global_header > div > div.supernav_container > a[data-tooltip-content=".submenu_store"]';
     const STEAM_SEARCH = '#store_nav_search_term';
@@ -20,7 +18,7 @@ describe('Steam TS', () => {
     ]
     parametrization.forEach((param) => {
         it('Steam TC', () => {
-            cy.visit(HOST);
+            cy.visit(Cypress.config("baseUrl"));
             cy.findVisibleElement(STEAM_SHOP);
 
             cy.get(STEAM_SEARCH).type(param.game);
