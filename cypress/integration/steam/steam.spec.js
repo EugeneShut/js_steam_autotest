@@ -1,5 +1,5 @@
 // https://wiki.a1qa.com/pages/viewpage.action?pageId=681093258
-import { sortPrices } from '../../utils/logic.js';
+import { sortAndCompareArrays } from '../../utils/logic.js';
 
 describe('Steam TS', () => {
     const SEARCH_RESULT = HOST + '/search/results?**';
@@ -34,7 +34,8 @@ describe('Steam TS', () => {
             cy.findVisibleElement(STEAM_SHOP_RESULT_ROW).find('a')
                 .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
                     const slicedArray = prices.slice(0, param.items);
-                    sortPrices(slicedArray);
+                    const array_of_prices = Array.from(slicedArray, spanElement => spanElement.innerText);
+                    sortAndCompareArrays(array_of_prices);
                 });
             });
         });
