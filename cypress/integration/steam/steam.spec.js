@@ -1,16 +1,9 @@
 // https://wiki.a1qa.com/pages/viewpage.action?pageId=681093258
 import { sortAndCompareArrays } from '../../utils/logic.js';
 
-const availablefixtures = [
-    {
-        "name": "data",
-        "context": "Withcher scenario"
-    },
-    {
-        "name": "data2",
-        "context": "Fallout scenario"
-    }
-]
+
+const availablefixtures = ["fallout", "witcher"]
+
 
 describe('Steam TS', function () {
     const HOST = Cypress.config("baseUrl")
@@ -25,9 +18,9 @@ describe('Steam TS', function () {
     const STEAM_SHOP_ITEM_PRICE = 'div.col.search_price.responsive_secondrow';
 
     availablefixtures.forEach((afixture) => {
-        describe(afixture.context, () => {
+        describe(afixture, () => {
             before(function () {
-                cy.fixture(afixture.name).then(function (data) {
+                cy.fixture(afixture).then(function (data) {
                     this.data = data;
                 })
             })
