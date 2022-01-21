@@ -1,11 +1,8 @@
 // https://wiki.a1qa.com/pages/viewpage.action?pageId=681093258
 import { sortAndCompareArrays } from '../../utils/logic.js';
+// const params = require('../fixtures/games.json');
 
-
-const availablefixtures = ["fallout", "witcher"]
-
-
-describe('Steam TS', function () {
+describe('Steam TS', function() {
     const HOST = Cypress.config("baseUrl")
     const SEARCH_RESULT = HOST + '/search/results?**';
     const STEAM_SHOP = 'div.supernav_container > a[data-tooltip-content=".submenu_store"]';
@@ -17,35 +14,53 @@ describe('Steam TS', function () {
     const STEAM_SHOP_FILTER_BY_DESC = '#Price_DESC';
     const STEAM_SHOP_ITEM_PRICE = 'div.col.search_price.responsive_secondrow';
 
-    availablefixtures.forEach((afixture) => {
-        describe(afixture, () => {
-            before(function () {
-                cy.fixture(afixture).then(function (data) {
-                    this.data = data;
-                })
-            })
+    // let gamesArr = [];
+    before(function() {
+        cy.fixture('games').then(games => {
+            this.games = games;
+            console.log(this.games)
+        });
+    });
 
-            it('Steam TC', function () {
+    context('Steam DDT', function() {
+        console.log(this.games)
+        this.games.forEach(game => {
+            console.log(this.games)
+                // it(`Steam find ${game}`, function() {
+            it(`Steam find`, function() {
+
                 cy.visit(HOST);
                 cy.findVisibleElement(STEAM_SHOP);
 
-                cy.get(STEAM_SEARCH).type(this.data.game);
+                cy.get(STEAM_SEARCH).type(game.game);
                 cy.findVisibleElement(STEAM_SHOP_SUGGESTIONS);
                 cy.get(STEAM_SHOP_SEARCH_BUTTON).click();
                 cy.get(STEAM_SHOP_RESULT_ROW).find('a').should('not.be.empty');
 
-                cy.intercept({method: "GET", url: SEARCH_RESULT,}).as("getSearch");
+                cy.intercept({ method: "GET", url: SEARCH_RESULT, }).as("getSearch");
                 cy.findVisibleElement(STEAM_SHOP_RESULT_ROW_FILTER).click();
                 cy.findVisibleElement(STEAM_SHOP_FILTER_BY_DESC).click();
                 cy.wait("@getSearch");
 
                 cy.findVisibleElement(STEAM_SHOP_RESULT_ROW).find('a')
                     .find(STEAM_SHOP_ITEM_PRICE).then((prices) => {
-                    const slicedArray = prices.slice(0, this.data.items);
-                    const array_of_prices = Array.from(slicedArray, spanElement => spanElement.innerText);
-                    sortAndCompareArrays(array_of_prices);
-                });
+                        const slicedArray = prices.slice(0, game.items);
+                        const array_of_prices = Array.from(slicedArray, spanElement => spanElement.innerText);
+                        sortAndCompareArrays(array_of_prices);
+                    });
             });
         });
     });
+
+    // availablefixtures.forEach((afixture) => {
+    //     describe(afixture, () => {
+    //         before(function() {
+    //             cy.fixture(afixture).then(function(data) {
+    //                 this.data = data;
+    //             })
+    //         })
+
+
+    //     });
+    // });
 });
